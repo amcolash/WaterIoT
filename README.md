@@ -5,15 +5,13 @@ A simple python-based program for a raspberry pi to check water level of a plant
 In addition to cloning this repository, there are a few extra steps if you want to have a similar setup.
 
 ## Install Python and Dev Requirements
-```
-sudo apt get install pthon-dev python-pip libffi-dev libssl-dev
-sudo pip install 'requests[security]'
-```
+`sudo apt get install pthon-dev python-pip libffi-dev libssl-dev`
 
 ## Install python-twitter (Twitter API for Python)
 Note: If you want to keep things clean it is recommended to use a virtual environment, otherwise you can just globally install python-twitter
 
 For me, I did: `sudo pip install python-twitter`
+Pip packages for security: `pip install 'requests[security]'`
 
 ## Set up credentials
 You will need to make a new Twitter Application and add your own twitter credentails to a file. More on getting credentials [here](https://dev.twitter.com/oauth/overview/application-owner-access-tokens)
