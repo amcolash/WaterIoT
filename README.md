@@ -11,6 +11,7 @@ In addition to cloning this repository, there are a few extra steps if you want 
 Note: If you want to keep things clean it is recommended to use a virtual environment, otherwise you can just globally install python-twitter
 
 For me, I did: `sudo pip install python-twitter`
+
 Pip packages for security: `pip install 'requests[security]'`
 
 ## Set up credentials
