@@ -5,7 +5,10 @@ A simple python-based program for a raspberry pi to check water level of a plant
 In addition to cloning this repository, there are a few extra steps if you want to have a similar setup.
 
 ## Install Python and Dev Requirements
-`sudo apt get install pthon-dev python-pip libffi-dev libssl-dev`
+```
+sudo apt get install pthon-dev python-pip libffi-dev libssl-dev
+sudo pip install 'requests[security]'
+```
 
 ## Install python-twitter (Twitter API for Python)
 Note: If you want to keep things clean it is recommended to use a virtual environment, otherwise you can just globally install python-twitter
@@ -27,6 +30,6 @@ access_token_scret='key_here'
 ## Set pins used
 Make sure to set the pins you are using with your setup, or use the ones I did:
 
-GPIO23 = Input (from digital output)
+GPIO23 = Input (attached to digital output of hygrometer)
 
 GPIO24 = Output (vcc for hygrometer)
