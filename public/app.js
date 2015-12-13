@@ -5,18 +5,18 @@ $(document).ready(function() {
         type: 'spline',
       },
       title: {
-        text: 'Recent Watering'
+        text: 'Recent Water Values'
       },
       xAxis: {
         type: 'datetime',
         title: {
-          text: "Date"
+          text: 'Date'
         }
       },
       yAxis: {
         labels: {
           formatter: function() {
-            return this.value == 1 ? "Wet" : "Dry";
+            return this.value == 1 ? 'Wet' : 'Dry';
           }
         },
         min: 0,
@@ -40,7 +40,6 @@ $(document).ready(function() {
     var lastWet;
     var lastDry;
     $.each(data, function(key, value) {
-      console.log(key + " : " + value);
       series.push([Date.parse(key), value]);
       lastStatus = value;
 
@@ -53,11 +52,13 @@ $(document).ready(function() {
       }
     });
 
-    $('#current').text(lastStatus ? "Wet" : "Dry");
+    $('#current').text(lastStatus ? 'Wet' : 'Dry');
     $('#lastWet').text(lastWet);
     $('#lastDry').text(lastDry);
 
     options.series[0].data = series;
+    options.series[0].color = '#449944';
+    options.series[0].name = 'Water Value';
     var chart = new Highcharts.Chart(options);
   });
 
