@@ -7,6 +7,7 @@ import signal
 import sys
 import auth
 import twitter
+import json
 
 GPIO.setmode(GPIO.BCM)  # Set's GPIO pins to BCM GPIO numbering
 INPUT_PIN = 23          # Sets our input pin, in this case 23
@@ -34,10 +35,10 @@ signal.signal(signal.SIGINT, signal_handler)
 def inputLow(channel):
   global lastMessage
   global twitter_api
-#  if (time.time() - lastMessage > 86400):
-  if (time.time() - lastMessage > 3):
+  if (time.time() - lastMessage > 86400):
+#  if (time.time() - lastMessage > 3):
     lastMessage = time.time()
-    #twitter_api.PostUpdate("Looks like I am pretty thirsty right now @amcolash should feed me soon :)")
+    twitter_api.PostUpdate("Looks like I am pretty thirsty right now, @amcolash should feed me soon :)")
 
 # Wait for the input to go high (no water), run the function when it does
 GPIO.add_event_detect(INPUT_PIN, GPIO.RISING, callback=inputLow, bouncetime=200)
@@ -48,6 +49,20 @@ while True:
   GPIO.output(24, True)
   sleep(5);
 
+  # Open the json file
+  with open('public/data.json') as f:
+    data = json.load(f)
+
+  # Append to the temp json object
+  if(GPIO.input(INPUT_PIN) == True):
+    data.update({time.time() : 0})
+  else:
+    data.update({time.time() : 1})
+
+  # Write changes to the file
+  with open('public/data.json', 'w') as f:
+    json.dump(data, f, sort_keys=True, indent=2)
+
   # Turn off voltage pin for 60 minutes to prevent wear
-  # GPIO.output(24, False)
-  # sleep(3600)
+  GPIO.output(24, False)
+  sleep(3600)
