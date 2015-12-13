@@ -1,3 +1,10 @@
+/* Special styling for larger screen sizes */
+@media (min-width: 768px) {
+  #info {
+    height: 100%;
+  }
+}
+
 html body {
   background: #494;
   padding: 15px;
@@ -7,6 +14,15 @@ html body {
   padding: 20px;
   background-color: #dff5df;
   border-radius: 6px;
+}
+
+#info img {
+  max-width: 160px;
+  margin-left: 13px;
+}
+
+#stats {
+  padding-left: 20px;
 }
 
 #chart {

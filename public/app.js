@@ -3,7 +3,6 @@ $(document).ready(function() {
       chart: {
         renderTo: 'chart',
         type: 'spline',
-        height: 350
       },
       title: {
         text: 'Recent Watering'
