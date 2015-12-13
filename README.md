@@ -35,4 +35,10 @@ GPIO24 = Output (vcc for hygrometer)
 
 ## Having things run on startup
 Since all I am using my pi for is this water sensor, I chose to put the script and server in `/etc/rc.local`.
+In this file, I added the following lines (for my setup)
+```
+python /home/pi/WaterPi/water.py
+pushd /home/pi/WaterPi/public; python –m SimpleHTTPServer 80; popd;
+```
+
 If you want to keep things more organized, I would suggest using [upstart](http://upstart.ubuntu.com/getting-started.html)
