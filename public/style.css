@@ -1,0 +1,20 @@
+html body {
+  background: #494;
+  padding: 15px;
+}
+
+#info {
+  padding: 20px;
+  background-color: #dff5df;
+  border-radius: 6px;
+}
+
+#chart {
+  padding-top: 20px;
+}
+
+#status {
+  list-style-type: none;
+  padding: 0px;
+  font-size: 18px;
+}

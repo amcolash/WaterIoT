@@ -1,5 +1,6 @@
 auth.py
 public/data.json
+public/bower_components
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
