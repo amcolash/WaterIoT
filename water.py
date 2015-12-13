@@ -53,11 +53,14 @@ while True:
   with open('public/data.json') as f:
     data = json.load(f)
 
+  # Get time/date
+  timestamp = time.strftime('%x %X %Z')
+
   # Append to the temp json object
   if(GPIO.input(INPUT_PIN) == True):
-    data.update({time.time() : 0})
+    data.update({timestamp : 0})
   else:
-    data.update({time.time() : 1})
+    data.update({timestamp : 1})
 
   # Write changes to the file
   with open('public/data.json', 'w') as f:
