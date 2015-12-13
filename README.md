@@ -32,3 +32,7 @@ Make sure to set the pins you are using with your setup, or use the ones I did:
 GPIO23 = Input (attached to digital output of hygrometer)
 
 GPIO24 = Output (vcc for hygrometer)
+
+## Having things run on startup
+Since all I am using my pi for is this water sensor, I chose to put the script and server in `/etc/rc.local`.
+If you want to keep things more organized, I would suggest using [upstart](http://upstart.ubuntu.com/getting-started.html)
