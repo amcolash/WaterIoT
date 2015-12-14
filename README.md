@@ -47,11 +47,15 @@ GPIO23 = Input (attached to digital output of hygrometer)
 
 GPIO24 = Output (vcc for hygrometer)
 
-## Having things run on startup
+## Setting up the web server and startup
+I set up a simple node server for monitoring my plant: `npm install http-server -g`.
+
 Since all I am using my pi for is this water sensor, I chose to put the script and server in `/etc/rc.local`.
-In this file, I added the following line (for my setup): `python /home/pi/WaterPi/water.py`
+I then added the following to my `etc/rc.local`:
+
+```
+http-server /home/pi/WaterPi/public -p 80
+python /home/pi/WaterPi/water.py
+```
 
 If you want to keep things more organized, I would suggest using [upstart](http://upstart.ubuntu.com/getting-started.html).
-
-## Configuring the web server
-In this project I have included some code that allows for a web server to be run. You will need to have some way to start this server. In my case, I just symlinked `/var/www` to `/home/pi/WaterPi/public`. There are better ways of doing this if you want more control however, like setting up a python or node static http file server.
