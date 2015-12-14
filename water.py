@@ -47,10 +47,10 @@ GPIO.add_event_detect(INPUT_PIN, GPIO.RISING, callback=inputLow, bouncetime=200)
 while True:
   # Turn on voltage for the hygrometer for 5 seconds to check if there is any water
   GPIO.output(24, True)
-  sleep(5);
+  sleep(5)
 
   # Open the json file
-  with open('public/data.json') as f:
+  with open('/home/pi/WaterPi/public/data.json') as f:
     data = json.load(f)
 
   # Get time/date
@@ -63,7 +63,7 @@ while True:
     data.update({timestamp : 1})
 
   # Write changes to the file
-  with open('public/data.json', 'w') as f:
+  with open('/home/pi/WaterPi/public/data.json', 'w') as f:
     json.dump(data, f, sort_keys=True, indent=2)
 
   # Turn off voltage pin for 60 minutes to prevent wear
