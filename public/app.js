@@ -32,6 +32,11 @@ $(document).ready(function() {
       series: [{}]
   };
 
+  // Don't cache the json :)
+  $.ajaxSetup({
+    cache:false
+  });
+
   $.getJSON('data.json', function(data) {
     var series = [];
 
