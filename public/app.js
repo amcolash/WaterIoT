@@ -32,6 +32,12 @@ $(document).ready(function() {
       series: [{}]
   };
 
+  Highcharts.setOptions({
+    global: {
+      useUTC: false
+    }
+  });
+
   // Don't cache the json :)
   $.ajaxSetup({
     cache:false
