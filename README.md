@@ -37,7 +37,7 @@ After you have your credentials, add them to a file named `auth.py` in the root 
 consumer_key='key_here'
 consumer_secret='key_here'
 access_token_key='key_here'
-access_token_scret='key_here'
+access_token_secret='key_here'
 ```
 
 ## Set pins used
@@ -51,11 +51,10 @@ GPIO24 = Output (vcc for hygrometer)
 I set up a simple node server for monitoring my plant: `npm install http-server -g`.
 
 Since all I am using my pi for is this water sensor, I chose to put the script and server in `/etc/rc.local`.
-I then added the following to my `etc/rc.local`:
 
 ```
-http-server /home/pi/WaterPi/public -p 80
-python /home/pi/WaterPi/water.py
+nohup python /home/pi/WaterPi/water.py &
+nohup /home/pi/.npm-packages/bin/http-server /home/pi/WaterPi/public -p 80 &
 ```
 
 If you want to keep things more organized, I would suggest using [upstart](http://upstart.ubuntu.com/getting-started.html).
