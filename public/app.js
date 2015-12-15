@@ -5,7 +5,7 @@ $(document).ready(function() {
         type: 'spline',
       },
       plotOptions: {
-        line: {
+        spline: {
           marker: {
             enabled: true
           }
