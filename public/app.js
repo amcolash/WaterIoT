@@ -4,6 +4,13 @@ $(document).ready(function() {
         renderTo: 'chart',
         type: 'spline',
       },
+      plotOptions: {
+        line: {
+          marker: {
+            enabled: true
+          }
+        }
+      },
       title: {
         text: 'Recent Water Values'
       },
