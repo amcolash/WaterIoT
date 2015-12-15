@@ -1,13 +1,37 @@
-/* Special styling for larger screen sizes */
+@media (max-width: 767px) {
+  body .container {
+    padding: 10px;
+  }
+
+  #info img {
+    display: block;
+    margin: auto;
+    max-width: 180px;
+  }
+
+  #chart {
+    height: 300px;
+  }
+}
+
 @media (min-width: 768px) {
+  html body {
+    padding: 15px;
+  }
+
   #info {
     height: 100%;
+  }
+
+  #info img {
+    float: left;
+    max-width: 160px;
+    margin-left: 13px;
   }
 }
 
 html body {
   background: #449944;
-  padding: 15px;
 }
 
 #info {
@@ -16,12 +40,8 @@ html body {
   border-radius: 6px;
 }
 
-#info img {
-  max-width: 160px;
-  margin-left: 13px;
-}
-
 #stats {
+  float: left;
   padding-left: 20px;
 }
 
