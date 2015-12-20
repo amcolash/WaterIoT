@@ -4,6 +4,11 @@ A simple python-based program for a raspberry pi to check water level of a plant
 # Setting Things Up
 In addition to cloning this repository, there are a few extra steps if you want to have a similar setup.
 
+This project supports both digital and analog outputs. An analog output will give better readings, but requires you to have an ADC for conversion to digital output. I used an MPC3002. The analog branch will be recieving updates, but the digital branch does have a working server and copy of the python code.
+
+## Set up SPI
+If you are using the analog version of this, set up SPI for the Raspberry Pi with the config utility `sudo raspi-config`. Go to advanced, then choose enable SPI.
+
 ## Install Python and Dev Requirements
 `sudo apt get install python-dev python-pip libffi-dev libssl-dev git`
 
