@@ -44,8 +44,9 @@ while True:
 
   average = 0
 
-  for i in range(0,50)
-    average += (read() - average) / i
+  for i in range(1,100):
+    value = 1.0 - max(0, read() - 0.4)
+    average += (value - average) / i
     time.sleep(0.1)
 
   print(average)
