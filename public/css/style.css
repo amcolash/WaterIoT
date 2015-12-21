@@ -8,10 +8,6 @@
     margin: auto;
     max-width: 180px;
   }
-
-  #chart {
-    height: 250px;
-  }
 }
 
 @media (min-width: 768px) {
@@ -30,10 +26,6 @@
     float: left;
     max-width: 160px;
     margin-left: 13px;
-  }
-
-  #chart {
-    height: 350px;
   }
 }
 
@@ -58,6 +50,7 @@ html body {
 
 #chart {
   padding: 0;
+  height: 350px;
 }
 
 #status {
