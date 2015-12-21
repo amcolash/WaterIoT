@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from time import sleep  # Allows us to call the sleep function to slow down our loop
 import RPi.GPIO as GPIO # Allows us to call our GPIO pins and names it just GPIO
 import time
 import signal
@@ -9,12 +8,10 @@ import auth
 import twitter
 import json
 
-GPIO.setmode(GPIO.BCM)  # Set's GPIO pins to BCM GPIO numbering
-INPUT_PIN = 23          # Sets our input pin, in this case 23
-GPIO.setup(INPUT_PIN, GPIO.IN)  # Set our input pin to be an input
-
-OUTPUT_PIN = 24         # Set the hygrometer to a GPIO (keep it off most of the time)
-GPIO.setup(24, GPIO.OUT)
+# Define "enable" for the sensor
+SENSOR_PIN = 25
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(SENSOR_PIN, GPIO.OUT)
 
 twitter_api = twitter.Api(consumer_key=auth.consumer_key,
                   consumer_secret=auth.consumer_secret,
@@ -26,28 +23,57 @@ lastMessage = 0        # last time (in secs since epoch) that a notification was
 # Gracefully quit on Ctrl-C and reset GPIO
 def signal_handler(signal, frame):
   print(' Ctrl+C pressed, closing WaterPi')
+  GPIO.output(SENSOR_PIN, GPIO.LOW)
   GPIO.cleanup()
   sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
 
 # Create a function to run when the input is high
-def inputLow(channel):
+def sendMessage():
   global lastMessage
   global twitter_api
   if (time.time() - lastMessage > 86400):
-#  if (time.time() - lastMessage > 3):
     lastMessage = time.time()
     twitter_api.PostUpdate("Looks like I am pretty thirsty right now, @amcolash should feed me soon :)")
 
-# Wait for the input to go high (no water), run the function when it does
-GPIO.add_event_detect(INPUT_PIN, GPIO.RISING, callback=inputLow, bouncetime=200)
+# Convert bit string to something usable
+def bitstring(n):
+  s = bin(n)[2:]
+  return '0'*(8-len(s)) + s
+
+# Read from SPI
+def read(adc_channel=0, spi_channel=0):
+  global conn
+  cmd = 128
+  if adc_channel:
+    cmd += 32
+  reply_bytes = conn.xfer2([cmd, 0])
+  reply_bitstring = ''.join(bitstring(n) for n in reply_bytes)
+  reply = reply_bitstring[5:15]
+  return int(reply, 2) / 2**10
 
 # Start a loop that never ends
 while True:
-  # Turn on voltage for the hygrometer for 5 seconds to check if there is any water
-  GPIO.output(24, True)
-  sleep(5)
+  # Turn on voltage for the hygrometer
+  GPIO.output(SENSOR_PIN, GPIO.HIGH)
+
+  # Set up SPI connection
+  conn = spidev.SpiDev(0, 0)
+  conn.max_speed_hz = 1200000 # 1.2 MHz
+
+  average = 0
+  # Check for 10 seconds, every 100ms - average the result
+  for i in range(1,100):
+   value = 1.0 - max(0, read() - 0.4)
+   average += (value - average) / i
+   time.sleep(0.1)
+
+  # Clean up SPI connection
+  conn.close()
+
+  # If average < 0.25 (dry), tweet at user
+  sendMessage()
 
   # Open the json file
   with open('/home/pi/WaterPi/public/data.json') as f:
@@ -57,15 +83,12 @@ while True:
   timestamp = time.strftime('%x %X %Z')
 
   # Append to the temp json object
-  if(GPIO.input(INPUT_PIN) == True):
-    data.update({timestamp : 0})
-  else:
-    data.update({timestamp : 1})
+  data.update({timestamp : average})
 
   # Write changes to the file
   with open('/home/pi/WaterPi/public/data.json', 'w') as f:
     json.dump(data, f, sort_keys=True, indent=2)
 
-  # Turn off voltage pin for 60 minutes to prevent wear
-  GPIO.output(24, False)
-  sleep(3600)
+  # Turn off voltage pin for 30 minutes to prevent wear
+  GPIO.output(SENSOR_PIN, GPIO.LOW)
+  sleep(1800)
