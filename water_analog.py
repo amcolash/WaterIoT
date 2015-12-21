@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import division # treat all division as non-integer division (remainders)
+
 import RPi.GPIO as GPIO # Allows us to call our GPIO pins and names it just GPIO
 import time
 import signal
@@ -7,7 +9,6 @@ import sys
 import auth
 import twitter
 import json
-from __future__ import division
 import spidev
 
 # Define "enable" for the sensor
@@ -74,8 +75,9 @@ while True:
   # Clean up SPI connection
   conn.close()
 
-  # If average < 0.25 (dry), tweet at user
-  sendMessage()
+  # If dry, tweet at user
+  if (average < 0.25):
+    sendMessage()
 
   # Open the json file
   with open('/home/pi/WaterPi/public/data.json') as f:
@@ -93,4 +95,4 @@ while True:
 
   # Turn off voltage pin for 30 minutes to prevent wear
   GPIO.output(SENSOR_PIN, GPIO.LOW)
-  sleep(1800)
+  time.sleep(1800)
