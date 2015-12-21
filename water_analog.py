@@ -7,6 +7,8 @@ import sys
 import auth
 import twitter
 import json
+from __future__ import division
+import spidev
 
 # Define "enable" for the sensor
 SENSOR_PIN = 25
