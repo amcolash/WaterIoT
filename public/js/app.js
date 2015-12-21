@@ -8,10 +8,8 @@ $(document).ready(function() {
         enabled: false
       },
       plotOptions: {
-        spline: {
-          marker: {
-            enabled: true
-          }
+        series: {
+          lineWidth: 4
         }
       },
       series: [{}],
