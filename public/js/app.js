@@ -12,9 +12,35 @@ $(document).ready(function() {
           lineWidth: 4
         }
       },
+      rangeSelector: {
+        buttons: [{
+        	type: 'week',
+        	count: 1,
+        	text: '1w'
+        }, {
+        	type: 'month',
+        	count: 1,
+        	text: '1m'
+        }, {
+        	type: 'month',
+        	count: 3,
+        	text: '3m'
+        }, {
+        	type: 'month',
+        	count: 6,
+        	text: '6m'
+        }, {
+        	type: 'year',
+        	count: 1,
+        	text: '1y'
+        }, {
+        	type: 'all',
+        	text: 'All'
+        }]
+      },
       series: [{}],
       title: {
-        text: 'Recent Water Values'
+        text: 'Recent Water Hydration'
       },
       tooltip: {
         xDateFormat: '%A, %B %d, %I:%M%p'
@@ -36,14 +62,14 @@ $(document).ready(function() {
         }
       },
       yAxis: {
-        labels: {
-          formatter: function() {
-            return this.value == 1 ? 'Wet' : 'Dry';
-          }
-        },
+        // labels: {
+        //   formatter: function() {
+        //     return this.value == 1 ? 'Wet' : 'Dry';
+        //   }
+        // },
         min: 0,
         max: 1,
-        tickInterval: 1,
+        tickInterval: 0.2,
         title: {
           text: null
         }
@@ -97,7 +123,7 @@ $(document).ready(function() {
     options.series[0].data = series;
     options.series[0].color = '#449944';
     options.series[0].name = 'Water Value';
-    var chart = new Highcharts.Chart(options);
+    var chart = new Highcharts.StockChart(options);
   });
 
 });
