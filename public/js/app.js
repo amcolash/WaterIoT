@@ -69,6 +69,7 @@ $(document).ready(function() {
         // },
         min: 0,
         max: 1,
+        offset: 24,
         tickInterval: 0.2,
         title: {
           text: null
@@ -98,11 +99,11 @@ $(document).ready(function() {
       series.push([Date.parse(key), value]);
       lastStatus = value;
 
-      if (value == 1) {
+      if (value > 0.8) {
         lastWet = key;
       }
 
-      if (value == 0) {
+      if (value < 0.2) {
         lastDry = key;
       }
     });
