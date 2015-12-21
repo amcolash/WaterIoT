@@ -1,38 +1,53 @@
-#!/usr/bin/python
-
+from __future__ import division
 import spidev
 import time
-import os
+import RPi.GPIO as GPIO
+import signal
+import sys
 
-# Open SPI bus
-spi = spidev.SpiDev()
-spi.open(0,0)
+# Define "enable" for the sensor
+SENSOR_PIN = 25
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(SENSOR_PIN, GPIO.OUT)
 
-# Function to read SPI data from MCP3008 chip
-# Channel must be an integer 0-7
-def ReadChannel(channel):
-  adc = spi.xfer2([1,(8+channel)<<4,0])
-  data = ((adc[1]&3) << 8) + adc[2]
-  return data
+# Set up ctrl-c handler
+# Gracefully quit on Ctrl-C and reset GPIO
+def signal_handler(signal, frame):
+  print(' Ctrl+C pressed, closing WaterPi')
+  GPIO.output(SENSOR_PIN, GPIO.LOW)
+  GPIO.cleanup()
+  sys.exit(0)
 
-# Define delay between readings
-delay = 0.1
+signal.signal(signal.SIGINT, signal_handler)
 
-average = 0
-count = 0
+def bitstring(n):
+  s = bin(n)[2:]
+  return '0'*(8-len(s)) + s
+
+def read(adc_channel=0, spi_channel=0):
+  global conn
+  cmd = 128
+  if adc_channel:
+    cmd += 32
+  reply_bytes = conn.xfer2([cmd, 0])
+  reply_bitstring = ''.join(bitstring(n) for n in reply_bytes)
+  reply = reply_bitstring[5:15]
+  return int(reply, 2) / 2**10
+
+# Turn on the sensor
+GPIO.output(SENSOR_PIN, GPIO.HIGH)
 
 while True:
+  # Set up SPI connection
+  conn = spidev.SpiDev(0, 0)
+  conn.max_speed_hz = 1200000 # 1.2 MHz
 
-  channel_0 = ReadChannel(0)
+  average = 0
 
-  count += 1
-  average += (channel_0 - average) / count
+  for i in range(0,50)
+    average += (read() - average) / i
+    time.sleep(0.1)
 
-  # converted = (channel_0 - 350) / 1020.0
-  # Print out results
-  print(channel_0)
-  # print(average)
+  print(average)
 
-
-  # Wait before repeating loop
-  time.sleep(delay)
+  conn.close()
