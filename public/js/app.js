@@ -108,7 +108,7 @@ $(document).ready(function() {
       }
     });
 
-    $('#current').text(lastStatus ? 'Wet' : 'Dry');
+    $('#current').text((lastStatus * 100).toFixed(2) + '% (' + (lastStatus > 0.35 ? 'Wet' : 'Dry') + ')');
     if (lastWet != null && lastWet != undefined) {
       $('#lastWet').text(new Date(lastWet).toLocaleString());
     } else {
