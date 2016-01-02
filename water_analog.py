@@ -85,7 +85,7 @@ while True:
 
   # Get time/date
   # timestamp = time.strftime('%x %X %Z')
-  timestamp = time.localtime()
+  timestamp = int(round(time.time() * 1000))
 
   # Append to the temp json object
   data.update({timestamp : average})
