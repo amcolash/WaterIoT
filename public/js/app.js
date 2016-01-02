@@ -36,37 +36,27 @@ $(document).ready(function() {
         }, {
         	type: 'all',
         	text: 'All'
-        }]
+        }],
+        selected: 0 // choose 1 week previous
       },
       series: [{}],
       title: {
         text: 'Recent Water Hydration'
       },
       tooltip: {
-        xDateFormat: '%A, %B %d, %I:%M%p'
+        xDateFormat: '%A, %B %d, %l:%M%p'
+        // formatter: function() {
+        //   var date = new Date(this.x);
+        //   return '<span>' + date + '</span>: ' + this.y + '%';
+        // }
       },
       xAxis: {
-        dateTimeLabelFormats: {
-        	millisecond: '%I:%M:%S.%L',
-        	second: '%I:%M:%S',
-        	minute: '%I:%M%p',
-        	hour: '%I:%M%p',
-        	day: '%e. %b',
-        	week: '%e. %b',
-        	month: '%b \'%y',
-        	year: '%Y'
-        },
         type: 'datetime',
         title: {
           text: 'Date'
         }
       },
       yAxis: {
-        // labels: {
-        //   formatter: function() {
-        //     return this.value == 1 ? 'Wet' : 'Dry';
-        //   }
-        // },
         min: 0,
         max: 1,
         offset: 24,
@@ -96,7 +86,7 @@ $(document).ready(function() {
     var lastWet;
     var lastDry;
     $.each(data, function(key, value) {
-      series.push([Date.parse(key), value]);
+      series.push([parseInt(key), value]);
       lastStatus = value;
 
       if (value > 0.8) {
@@ -110,13 +100,13 @@ $(document).ready(function() {
 
     $('#current').text((lastStatus * 100).toFixed(2) + '% (' + (lastStatus > 0.35 ? 'Wet' : 'Dry') + ')');
     if (lastWet != null && lastWet != undefined) {
-      $('#lastWet').text(new Date(lastWet).toLocaleString());
+      $('#lastWet').text(new Date(parseInt(lastWet)).toLocaleString());
     } else {
       $('#lastWet').text('Not enough data');
     }
 
     if (lastDry != null && lastDry != undefined) {
-      $('#lastDry').text(new Date(lastDry).toLocaleString());
+      $('#lastDry').text(new Date(parseInt(lastDry)).toLocaleString());
     } else {
       $('#lastDry').text('Not enough data');
     }
