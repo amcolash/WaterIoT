@@ -14,6 +14,10 @@ $(document).ready(function() {
       },
       rangeSelector: {
         buttons: [{
+          type: 'day',
+          count: 3,
+          text: '3d'
+        }, {
         	type: 'week',
         	count: 1,
         	text: '1w'
@@ -30,14 +34,10 @@ $(document).ready(function() {
         	count: 6,
         	text: '6m'
         }, {
-        	type: 'year',
-        	count: 1,
-        	text: '1y'
-        }, {
         	type: 'all',
         	text: 'All'
         }],
-        selected: 0 // choose 1 week previous
+        selected: 1 // choose 1 week previous
       },
       series: [{}],
       title: {
