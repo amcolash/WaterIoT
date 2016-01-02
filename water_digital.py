@@ -54,7 +54,8 @@ while True:
     data = json.load(f)
 
   # Get time/date
-  timestamp = time.strftime('%x %X %Z')
+  # timestamp = time.strftime('%x %X %Z')
+  timestamp = time.localtime()
 
   # Append to the temp json object
   if(GPIO.input(INPUT_PIN) == True):
