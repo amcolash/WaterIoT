@@ -111,6 +111,16 @@ $(document).ready(function() {
       $('#lastDry').text('Not enough data');
     }
 
+    // sort the dates because it doesn't seem like Python is doing it for us :/
+    series.sort(function(a,b){
+        if(a == b)
+            return 0;
+        if(a < b)
+            return -1;
+        if(a > b)
+            return 1;
+    });
+
     options.series[0].data = series;
     options.series[0].color = '#449944';
     options.series[0].name = 'Water Value';
