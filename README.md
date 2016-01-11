@@ -1,5 +1,5 @@
 # WaterPi
-A simple python-based program for a raspberry pi to check water level of a plant, which triggers a notification.
+A simple python-based program for a IoT device to check water level of a plant, graph on website and can trigger a notification if dry.
 
 # Setting Things Up
 In addition to cloning this repository, there are a few extra steps if you want to have a similar setup.
