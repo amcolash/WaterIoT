@@ -1,24 +1,20 @@
-# WaterPi
+# WaterIoT
 A simple python-based program for a IoT device to check water level of a plant, graph on website and can trigger a notification if dry.
+
+This branch (master) contains code for an Intel Galileo/Edison/etc. If you have a raspberry pi or similar, check the (raspberry_pi) branch - which covers extra steps for analog input readings.
 
 # Setting Things Up
 In addition to cloning this repository, there are a few extra steps if you want to have a similar setup.
 
-This project supports both digital and analog outputs. An analog output will give better readings, but requires you to have an ADC for conversion to digital output. I used an MPC3002. The analog branch will be recieving updates, but the digital branch does have a working server and copy of the python code.
-
-## Set up SPI
-If you are using the analog version of this, set up SPI for the Raspberry Pi with the config utility `sudo raspi-config`. Go to advanced, then choose enable SPI.
-
-## Install Python and Dev Requirements
-`sudo apt get install python-dev python-pip libffi-dev libssl-dev git`
+## Install Requirements
+By default, the standard linux distro for the Galileo has python and node (I think for Edison too!). There should be very little required to get things set up.
 
 ## NodeJS installation
-I used bower for this project, so you will need nodejs as well. I installed this via adafruit's repository and set up a custom npm install location to avoid using root access to install node packages.
+I used bower for this project and set up a custom npm install location to avoid using root access to install node packages.
 ```
-curl -sLS https://apt.adafruit.com/add | sudo bash
-sudo apt-get install node
 mkdir ~/.npm-packages
-`npm config set prefix '~/.npm-packages'
+npm config set prefix '~/.npm-packages'
+npm install -g bower
 ```
 
 Additionally, add the following to your `~/.bashrc` file: `export PATH="$PATH:$HOME/.npm-packages/bin"`
@@ -26,12 +22,12 @@ Additionally, add the following to your `~/.bashrc` file: `export PATH="$PATH:$H
 ## Install python-twitter (Twitter API for Python)
 Note: If you want to keep things clean it is recommended to use a virtual environment, otherwise you can just globally install python-twitter
 
-For me, I did: `sudo pip install python-twitter`
+For me, I did: `pip install python-twitter`
 
 Pip packages for security: `pip install 'requests[security]'`
 
 ## Clone the repository
-To clone this project, simply do `git clone git@github.com:amcolash/WaterPi.git`
+To clone this project, simply do `git clone git@github.com:amcolash/WaterIoT.git`
 
 ## Set up credentials
 You will need to make a new Twitter Application and add your own twitter credentails to a file. More on getting credentials [here](https://dev.twitter.com/oauth/overview/application-owner-access-tokens)
@@ -48,9 +44,9 @@ access_token_secret='key_here'
 ## Set pins used
 Make sure to set the pins you are using with your setup, or use the ones I did:
 
-GPIO23 = Input (attached to digital output of hygrometer)
+A0 = Input (attached to digital output of hygrometer)
 
-GPIO24 = Output (vcc for hygrometer)
+D13 = Output (vcc for hygrometer)
 
 ## Setting up the web server and startup
 I set up a simple node server for monitoring my plant: `npm install http-server -g`.
@@ -61,5 +57,3 @@ Since all I am using my pi for is this water sensor, I chose to put the script a
 nohup python /home/pi/WaterPi/water.py &
 nohup /home/pi/.npm-packages/bin/http-server /home/pi/WaterPi/public -p 80 &
 ```
-
-If you want to keep things more organized, I would suggest using [upstart](http://upstart.ubuntu.com/getting-started.html).
