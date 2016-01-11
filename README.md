@@ -1,4 +1,4 @@
-# WaterPi
+# WaterIoT
 A simple python-based program for a IoT device to check water level of a plant, graph on website and can trigger a notification if dry.
 
 # Setting Things Up
