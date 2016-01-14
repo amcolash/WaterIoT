@@ -2,19 +2,29 @@
 
 from __future__ import division # treat all division as non-integer division (remainders)
 
-import RPi.GPIO as GPIO # Allows us to call our GPIO pins and names it just GPIO
+import mraa
 import time
 import signal
 import sys
 import auth
 import twitter
 import json
-import spidev
+
+# Path to use for web server / checkout and data
+PATH='/home/root/WaterIoT/'
 
 # Define "enable" for the sensor
-SENSOR_PIN = 25
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(SENSOR_PIN, GPIO.OUT)
+SENSOR = 0
+OUTPUT = 13
+sensor_pin = mraa.Gpio(OUTPUT)
+input_pin = mraa.Aio(SENSOR)
+
+# Set up min/max for normal plat - this defines range of values
+MIN = 0.133
+MAX = 0.971
+MAGIC_NUMBER = pow(MAX - MIN, -1)
+
+NUMBER_OF_SAMPLES = 200
 
 twitter_api = twitter.Api(consumer_key=auth.consumer_key,
                   consumer_secret=auth.consumer_secret,
@@ -26,8 +36,7 @@ lastMessage = 0        # last time (in secs since epoch) that a notification was
 # Gracefully quit on Ctrl-C and reset GPIO
 def signal_handler(signal, frame):
   print(' Ctrl+C pressed, closing WaterPi')
-  GPIO.output(SENSOR_PIN, GPIO.LOW)
-  GPIO.cleanup()
+  sensor_pin.write(0)
   sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
@@ -38,49 +47,29 @@ def sendMessage():
   global twitter_api
   if (time.time() - lastMessage > 86400):
     lastMessage = time.time()
-    twitter_api.PostUpdate("Looks like I am pretty thirsty right now, @amcolash should feed me soon :)")
-
-# Convert bit string to something usable
-def bitstring(n):
-  s = bin(n)[2:]
-  return '0'*(8-len(s)) + s
-
-# Read from SPI
-def read(adc_channel=0, spi_channel=0):
-  global conn
-  cmd = 128
-  if adc_channel:
-    cmd += 32
-  reply_bytes = conn.xfer2([cmd, 0])
-  reply_bitstring = ''.join(bitstring(n) for n in reply_bytes)
-  reply = reply_bitstring[5:15]
-  return int(reply, 2) / 2**10
+    twitter_api.PostUpdate('Looks like I am pretty thirsty right now, @amcolash should feed me soon :)')
 
 # Start a loop that never ends
 while True:
   # Turn on voltage for the hygrometer
-  GPIO.output(SENSOR_PIN, GPIO.HIGH)
-
-  # Set up SPI connection
-  conn = spidev.SpiDev(0, 0)
-  conn.max_speed_hz = 1200000 # 1.2 MHz
+  sensor_pin.write(1)
+  time.sleep(0.5)
 
   average = 0
   # Check for 10 seconds, every 100ms - average the result
-  for i in range(1,100):
-   value = 1.0 - max(0, read() - 0.4)
+  for i in range(1, NUMBER_OF_SAMPLES):
+   value = 1.0 - min(input_pin.readFloat() * MAGIC_NUMBER, 1)
    average += (value - average) / i
-   time.sleep(0.1)
+   time.sleep(0.05)
 
-  # Clean up SPI connection
-  conn.close()
+  print('average: ' + str(average))
 
   # If dry, tweet at user
-  if (average < 0.25):
+  if (average < 0.35):
     sendMessage()
 
   # Open the json file
-  with open('/home/pi/WaterPi/public/data.json') as f:
+  with open(PATH + 'public/data.json') as f:
     data = json.load(f)
 
   # Get time/date
@@ -91,9 +80,9 @@ while True:
   data.update({timestamp : average})
 
   # Write changes to the file
-  with open('/home/pi/WaterPi/public/data.json', 'w') as f:
+  with open(PATH + 'public/data.json', 'w') as f:
     json.dump(data, f, sort_keys=True, indent=2)
 
   # Turn off voltage pin for 30 minutes to prevent wear
-  GPIO.output(SENSOR_PIN, GPIO.LOW)
+  sensor_pin.write(0)
   time.sleep(1800)
