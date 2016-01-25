@@ -20,7 +20,7 @@ sensor_pin = mraa.Gpio(OUTPUT)
 input_pin = mraa.Aio(SENSOR)
 
 # Set up min/max for normal plat - this defines range of values
-MIN = 0.133
+MIN = 0.75
 MAX = 0.971
 MAGIC_NUMBER = pow(MAX - MIN, -1)
 
