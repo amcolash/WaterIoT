@@ -49,11 +49,4 @@ A0 = Input (attached to digital output of hygrometer)
 D13 = Output (vcc for hygrometer)
 
 ## Setting up the web server and startup
-I set up a simple node server for monitoring my plant: `npm install http-server -g`.
-
-Since all I am using my pi for is this water sensor, I chose to put the script and server in `/etc/rc.local`.
-
-```
-nohup python /home/pi/WaterPi/water.py &
-nohup /home/pi/.npm-packages/bin/http-server /home/pi/WaterPi/public -p 80 &
-```
+Since all I am using my Galileo for is this water sensor, I chose to put the server and script into an [upstart](http://upstart.ubuntu.com/) script. To keep things easier, I have included my own script in this repository - it is named `wateriot`. Simple copy into `/etc/init.d/` and then run `update-rc.d wateriot defaults`

@@ -1,0 +1,24 @@
+#! /bin/sh
+# /etc/init.d/wateriot
+
+case "$1" in
+  start)
+    echo "Starting WaterIoT"
+    # run application you want to start
+    python /home/root/WaterIoT/water_analog.py &
+    pushd /home/root/WaterIoT/public; python -m SimpleHTTPServer 3002; popd &
+  ;;
+
+  stop)
+    echo "Stopping WaterIoT"
+    # kill application you want to stop, not the best :/
+    killall python
+    ;;
+
+  *)
+    echo "Usage: /etc/init.d/example{start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
