@@ -11,7 +11,7 @@ try:
   y = mraa.Aio(0)
 
   z = y.readFloat()
-  z = 1 - min(z * 1.1933, 1)
+  # z = 1 - min(z * 1.1933, 1)
   print ("%.5f" % z)
   x.write(0)
 except:

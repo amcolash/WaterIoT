@@ -20,8 +20,8 @@ sensor_pin = mraa.Gpio(OUTPUT)
 input_pin = mraa.Aio(SENSOR)
 
 # Set up min/max for normal plat - this defines range of values
-MIN = 0.75
-MAX = 0.971
+MIN = 0.35
+MAX = 0.97
 MAGIC_NUMBER = pow(MAX - MIN, -1)
 
 NUMBER_OF_SAMPLES = 200
@@ -58,7 +58,7 @@ while True:
   average = 0
   # Check for 10 seconds, every 100ms - average the result
   for i in range(1, NUMBER_OF_SAMPLES):
-   value = 1.0 - min(input_pin.readFloat() * MAGIC_NUMBER, 1)
+   value = max(0, ((MAGIC_NUMBER * (1 - input_pin.readFloat())) - (MAGIC_NUMBER - 1)))
    average += (value - average) / i
    time.sleep(0.05)
 
